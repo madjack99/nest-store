@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Redirect,
+  Render,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -44,17 +45,33 @@ export class ProductController {
   }
 
   @Get('getOne/:id')
-  async getOne(@Param('id', ParseIntPipe) id: number): Promise<Product> {
-    return await this.productService.getOne(id);
+  @Render('edit-product')
+  async getOne(@Param('id', ParseIntPipe) id: number) {
+    const product = await this.productService.getOne(id);
+    return { product };
   }
 
   @Put('update/:id')
+  @Redirect('/mystore/home')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './public/uploads',
+        filename: (req: any, file: any, cb: any) => {
+          cb(null, new Date().toISOString() + file.originalname);
+        },
+      }),
+    }),
+  )
   async updateProduct(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateData: ProductDTO,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    await this.productService.updateProduct(id, updateData);
-    return 'Product updated successfully';
+    if (file) {
+      updateData.image = file.filename;
+    }
+    return await this.productService.updateProduct(id, updateData);
   }
 
   @Delete('delete/:id')
