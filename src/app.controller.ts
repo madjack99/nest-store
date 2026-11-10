@@ -1,5 +1,6 @@
 import { Controller, Get, Render } from '@nestjs/common';
 import { AppService } from './app.service.js';
+import { products } from './products/product.js';
 
 @Controller()
 export class AppController {
@@ -8,6 +9,6 @@ export class AppController {
   @Get('mystore')
   @Render('home')
   renderPage() {
-    return { message: 'Welcome to the Hope Page' };
+    return { products };
   }
 }

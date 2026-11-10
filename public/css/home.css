@@ -1,0 +1,33 @@
+.custom-card {
+  width: 18rem;
+}
+
+.card-container {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.custom-card .card-image {
+  height: 24rem;
+}
+
+.name-price-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-buttons {
+  width: 46%;
+}
+
+.hover-yellow:hover {
+  background-color: #ffc107 !important;
+  color: #1f2022 !important;
+}
+
+.hover-red:hover {
+  background-color: #fd5959 !important;
+  color: #1f2022 !important;
+}

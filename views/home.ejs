@@ -19,10 +19,38 @@
       integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
       crossorigin="anonymous"
     ></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css" integrity="sha384-Bk5cbLkZQ5raZ0+H2/+VbfYx3WpvxvQK4zqXZr7sYODuaX7bKXoSOnipQxkaS8sv" crossorigin="anonymous">
     <title>My store</title>
+    <link rel="stylesheet" href="../css/home.css">
   </head>
   <body>
     <%- include('./includes/navbar.ejs') %>
-    <h1><%= message %></h1>
+    <div>
+      <div class="pt-3 card-container">
+        <% if (products.length > 0) { %>
+          <% for (let product of products) { %>
+            <div class="card m-3 custom-card">
+              <img src="<%= '/images/' + product.img %>" alt="<%= product.name %>" class="card-img-top card-image" />
+
+              <div class="card-body">
+                <div class="name-price-container">
+                  <h3 class="card-title"><%= product.name %></h3>
+                  <h4 class="card-title fw-light"><%= "$" + product.price %></h4>
+                </div>
+
+                <div>
+                  <a href="#" class="btn btn-outline-dark mx-1 mt-4 edit-buttons hover-yellow">
+                    <i class="bi bi-pencil-fill"></i>
+                  </a>
+                  <a href="#" class="btn btn-outline-dark mx-1 mt-4 edit-buttons hover-red">
+                    <i class="bi bi-trash-fill"></i>
+                  </a>
+                </div>
+            </div>
+            </div>
+          <% } %>
+        <% } %>
+      </div>
+    </div>
   </body>
 </html>
