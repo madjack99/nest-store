@@ -3,9 +3,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+      integrity="sha384-Bk5cbLkZQ5raZ0+H2/+VbfYx3WpvxvQK4zqXZr7sYODuaX7bKXoSOnipQxkaS8sv"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+      integrity="sha384-Bk5cbLkZQ5raZ0+H2/+VbfYx3WpvxvQK4zqXZr7sYODuaX7bKXoSOnipQxkaS8sv"
+      crossorigin="anonymous"
+    />
+
     <title>Add Product</title>
   </head>
   <body>
-    <h1>Add product page!</h1>
+    <%- include('./includes/navbar.ejs') %>
+    <div class="container-fluid mt-5 d-flex justify-content-center">
+      <form action="/mystore/add-product" class="w-25" method="post">
+        <h2 class="fw-bold text-muted display-3 m-4 mb-2">Add Product</h2>
+        <div class="form-control m-3 p-4">
+          <div class="row">
+            <div class="col-8 mt-2 mb-3">
+              <label for="productname" class="form-label fs-4"
+                >Product Name</label
+              >
+              <input
+                type="text"
+                id="productname"
+                name="productname"
+                class="form-control"
+              />
+            </div>
+            <div class="col-4 mt-2 mb-3">
+              <label for="price" class="form-label fs-4">Price</label>
+              <input type="text" id="price" name="price" class="form-control" />
+            </div>
+            <div class="my-3">
+              <label for="image" class="form-label">Select Image</label>
+              <input type="file" id="price" name="image" class="form-control" />
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary fs-4 m-3 w-100" type="submit">
+          <i class="bi bi-cart-plus-fill p-1"></i>Add Product
+        </button>
+      </form>
+    </div>
   </body>
 </html>
