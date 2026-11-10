@@ -7,4 +7,6 @@ export class ProductDTO {
 
   @Min(0.01, { message: 'Price must be greater that 0' })
   price: number;
+
+  image: string;
 }

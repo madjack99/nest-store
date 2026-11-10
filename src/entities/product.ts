@@ -13,8 +13,11 @@ export class Product {
   @Column('varchar', { nullable: false, length: 100 })
   productname: string;
 
-  @Column('decimal', { nullable: false })
+  @Column('int', { nullable: false })
   price: number;
+
+  @Column({ type: 'varchar', length: 255, nullable: false })
+  image: string;
 
   @CreateDateColumn()
   createdAt: Date;

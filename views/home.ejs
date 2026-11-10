@@ -30,11 +30,11 @@
         <% if (products.length > 0) { %>
           <% for (let product of products) { %>
             <div class="card m-3 custom-card">
-              <img src="<%= '/images/' + product.img %>" alt="<%= product.name %>" class="card-img-top card-image" />
+              <img src="<%= '/uploads/' + product.image %>" alt="<%= product.productname %>" class="card-img-top card-image" />
 
               <div class="card-body">
                 <div class="name-price-container">
-                  <h3 class="card-title"><%= product.name %></h3>
+                  <h3 class="card-title"><%= product.productname %></h3>
                   <h4 class="card-title fw-light"><%= "$" + product.price %></h4>
                 </div>
 

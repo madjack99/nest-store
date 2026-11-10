@@ -11,10 +11,11 @@ export class ProductService {
   ) {}
 
   async addProduct(newProduct: ProductDTO) {
-    const { productname, price } = newProduct;
+    const { productname, price, image } = newProduct;
     const product = this.productRepository.create({
       productname,
       price,
+      image,
     });
     return await this.productRepository.save(product);
   }

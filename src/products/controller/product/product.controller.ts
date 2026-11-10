@@ -7,24 +7,40 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Redirect,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from '../../service/product/product.service.js';
 import { ProductDTO } from '../../../DTO/product.dto.js';
 import { Product } from '../../../entities/product.js';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('create')
-  async addProduct(@Body() productData: ProductDTO) {
-    await this.productService.addProduct(productData);
-    return 'Product added successfully';
-  }
-
-  @Get('getAll')
-  async getAll() {
-    return await this.productService.getAll();
+  @Redirect('/mystore/home')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './public/uploads',
+        filename: (req: any, file: any, cb: any) => {
+          cb(null, new Date().toISOString() + file.originalname);
+        },
+      }),
+    }),
+  )
+  async addProduct(
+    @Body() productData: ProductDTO,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (file) {
+      productData.image = file.filename;
+    }
+    return await this.productService.addProduct(productData);
   }
 
   @Get('getOne/:id')
