@@ -75,6 +75,7 @@ export class ProductController {
   }
 
   @Delete('delete/:id')
+  @Redirect('/mystore/home')
   async deleteProduct(@Param('id', ParseIntPipe) id: number) {
     await this.productService.deleteProduct(id);
     return 'Product deleted successfully';

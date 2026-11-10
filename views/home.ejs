@@ -42,9 +42,11 @@
                   <a href="/product/getOne/<%= product.id %>" class="btn btn-outline-dark mx-1 mt-4 edit-buttons hover-yellow">
                     <i class="bi bi-pencil-fill"></i>
                   </a>
-                  <a href="#" class="btn btn-outline-dark mx-1 mt-4 edit-buttons hover-red">
+                  <form action="/product/delete/<%= product.id %>?_method=DELETE" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-dark mx-1 mt-4 edit-buttons hover-red">
                     <i class="bi bi-trash-fill"></i>
-                  </a>
+                  </button>
+                </form>
                 </div>
             </div>
             </div>
