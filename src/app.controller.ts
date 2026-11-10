@@ -6,15 +6,17 @@ import {
   Render,
 } from '@nestjs/common';
 import { AppService } from './app.service.js';
-import { products } from './products/product.js';
+import { ProductService } from './products/service/product/product.service.js';
 
 @Controller('mystore')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly productService: ProductService) {}
 
   @Get('home')
   @Render('home')
-  renderPage() {
+  async renderPage() {
+    const products = await this.productService.getAll();
+    console.log(products);
     return { products };
   }
 
@@ -22,16 +24,5 @@ export class AppController {
   @Render('add-product')
   renderAddProductPage() {
     return null;
-  }
-
-  @Get('edit-product/:id')
-  @Render('edit-product')
-  renderEditProductPage(@Param('id') id: string) {
-    const product = products.find((p) => p.id === parseInt(id));
-    if (product) {
-      return { product };
-    } else {
-      throw new NotFoundException('Product not found');
-    }
   }
 }
