@@ -25,4 +25,10 @@ export class AppController {
   renderAddProductPage() {
     return null;
   }
+
+  @Get('sign-up')
+  @Render('sign-up')
+  renderSignUpPage() {
+    return null;
+  }
 }

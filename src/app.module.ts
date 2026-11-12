@@ -4,6 +4,10 @@ import { AppService } from './app.service.js';
 import { ProductModule } from './products/module/product/product.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.js';
+import { UserController } from './users/controller/user/user.controller.js';
+import { UserService } from './users/service/user/user.service.js';
+import { UserModule } from './users/module/user/user.module.js';
+import { User } from './entities/user.js';
 
 @Module({
   imports: [
@@ -15,9 +19,10 @@ import { Product } from './entities/product.js';
       password: '',
       database: 'nestmysql',
       synchronize: true,
-      entities: [Product],
+      entities: [Product, User],
     }),
     ProductModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
