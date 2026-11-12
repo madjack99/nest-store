@@ -4,9 +4,11 @@ import {
   NotFoundException,
   Param,
   Render,
+  Req,
 } from '@nestjs/common';
 import { AppService } from './app.service.js';
 import { ProductService } from './products/service/product/product.service.js';
+import type { Request } from 'express';
 
 @Controller('mystore')
 export class AppController {
@@ -14,10 +16,11 @@ export class AppController {
 
   @Get('home')
   @Render('home')
-  async renderPage() {
+  async renderPage(@Req() req: Request) {
+    const cookie = req.cookies;
+
     const products = await this.productService.getAll();
-    console.log(products);
-    return { products };
+    return { products, isLoggedIn: cookie.isLoggedIn };
   }
 
   @Get('add-product')
