@@ -5,11 +5,12 @@ import {
   Post,
   Redirect,
   Render,
+  Req,
   Res,
 } from '@nestjs/common';
 import { UserService } from '../../service/user/user.service.js';
 import { UserDTO } from '../../../DTO/user.dto.js';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -17,14 +18,15 @@ export class UserController {
 
   @Get('login')
   @Render('login')
-  renderLogin() {
-    return null;
+  renderLogin(@Req() req: Request) {
+    const isLoggedIn = req.session.isLoggedIn || 'false';
+    return { isLoggedIn };
   }
 
   @Get('logout')
-  logout(@Res() res: Response) {
-    res.clearCookie('isLoggedIn');
-    return res.redirect('/mystore/home');
+  @Redirect('/mystore/home')
+  logout(@Res() res: Response, @Req() req: Request) {
+    req.session.isLoggedIn = 'false';
   }
 
   @Post('sign-up')
@@ -34,21 +36,25 @@ export class UserController {
   }
 
   @Post('login')
-  async userLogin(@Body() body: UserDTO, @Res() res: Response) {
+  async userLogin(
+    @Body() body: UserDTO,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
     const { username, password } = body;
 
     const user = await this.userService.findUserByUsername(username);
 
     if (user) {
       if (user && user.password === password) {
-        res.cookie('isLoggedIn', 'true');
+        req.session.isLoggedIn = 'true';
         return res.redirect('/mystore/home');
       } else {
-        res.cookie('isLoggedIn', 'invalidPassword');
+        req.session.isLoggedIn = 'invalidPassword';
         return res.redirect('/user/login');
       }
     } else {
-      res.cookie('isLoggedIn', 'invalidUsername');
+      req.session.isLoggedIn = 'invalidUsername';
       return res.redirect('/user/login');
     }
   }
