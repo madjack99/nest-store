@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  InternalServerErrorException,
   Post,
+  Query,
   Redirect,
   Render,
   Req,
@@ -18,15 +20,24 @@ export class UserController {
 
   @Get('login')
   @Render('login')
-  renderLogin(@Req() req: Request) {
+  renderLogin(
+    @Req() req: Request,
+    @Query('message') message: string,
+    @Query('username') username: string,
+  ) {
     const isLoggedIn = req.session.isLoggedIn || 'false';
-    return { isLoggedIn };
+    return { isLoggedIn, username, message };
   }
 
   @Get('logout')
   @Redirect('/mystore/home')
   logout(@Res() res: Response, @Req() req: Request) {
-    req.session.isLoggedIn = 'false';
+    req.session.destroy((err) => {
+      if (err) {
+        throw new InternalServerErrorException('Failed to destroy session');
+      }
+    });
+    res.clearCookie('connect.sid');
   }
 
   @Post('sign-up')
@@ -48,14 +59,28 @@ export class UserController {
     if (user) {
       if (user && user.password === password) {
         req.session.isLoggedIn = 'true';
+        req.session.username = username;
+        req.session.message = '';
+        req.session.save((err) => {
+          console.log(err);
+        });
+
         return res.redirect('/mystore/home');
       } else {
         req.session.isLoggedIn = 'invalidPassword';
-        return res.redirect('/user/login');
+        req.session.destroy(() => {
+          return res.redirect(
+            `/user/login?message=Invalid password. Please try again.&username=${username}`,
+          );
+        });
       }
     } else {
       req.session.isLoggedIn = 'invalidUsername';
-      return res.redirect('/user/login');
+      req.session.destroy(() => {
+        return res.redirect(
+          `/user/login?message=Not a registered user. Please sign up.&username=${username}`,
+        );
+      });
     }
   }
 }
