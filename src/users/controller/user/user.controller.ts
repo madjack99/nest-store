@@ -13,10 +13,14 @@ import {
 import { UserService } from '../../service/user/user.service.js';
 import { UserDTO } from '../../../DTO/user.dto.js';
 import type { Request, Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Get('login')
   @Render('login')
@@ -58,16 +62,15 @@ export class UserController {
 
     if (user) {
       if (user && user.password === password) {
-        req.session.isLoggedIn = 'true';
-        req.session.username = username;
-        req.session.message = '';
+        const token = this.jwtService.sign({ username });
+        req.session.token = token; 
+
         req.session.save((err) => {
           console.log(err);
         });
 
         return res.redirect('/mystore/home');
       } else {
-        req.session.isLoggedIn = 'invalidPassword';
         req.session.destroy(() => {
           return res.redirect(
             `/user/login?message=Invalid password. Please try again.&username=${username}`,
@@ -75,7 +78,6 @@ export class UserController {
         });
       }
     } else {
-      req.session.isLoggedIn = 'invalidUsername';
       req.session.destroy(() => {
         return res.redirect(
           `/user/login?message=Not a registered user. Please sign up.&username=${username}`,

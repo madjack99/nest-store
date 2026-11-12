@@ -5,5 +5,6 @@ declare module 'express-session' {
     isLoggedIn?: string;
     username?: string;
     message?: string;
+    token?: string;
   }
 }
