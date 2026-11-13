@@ -48,7 +48,7 @@ export class ProductController {
   @Render('edit-product')
   async getOne(@Param('id', ParseIntPipe) id: number) {
     const product = await this.productService.getOne(id);
-    return { product };
+    return { product, isLoggedIn: global.isLoggedIn };
   }
 
   @Put('update/:id')

@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  InternalServerErrorException,
   Post,
   Query,
   Redirect,
@@ -30,18 +29,20 @@ export class UserController {
     @Query('username') username: string,
   ) {
     const isLoggedIn = req.session.isLoggedIn || 'false';
-    return { isLoggedIn, username, message };
+    return { isLoggedIn: global.isLoggedIn, username, message };
   }
 
   @Get('logout')
-  @Redirect('/mystore/home')
   logout(@Res() res: Response, @Req() req: Request) {
     req.session.destroy((err) => {
       if (err) {
-        throw new InternalServerErrorException('Failed to destroy session');
+        console.error('Failed to destroy session:', err);
+        return res.status(500).send('Failed to destroy session');
       }
+      global.isLoggedIn = 'false';
+      res.clearCookie('connect.sid');
+      return res.redirect('/mystore/home');
     });
-    res.clearCookie('connect.sid');
   }
 
   @Post('sign-up')
@@ -61,16 +62,24 @@ export class UserController {
     const user = await this.userService.findUserByUsername(username);
 
     if (user) {
-      if (user && user.password === password) {
+      const isMatch = await this.userService.comparePasswords(
+        password,
+        user.password,
+      );
+
+      if (isMatch) {
         const token = this.jwtService.sign({ username });
-        req.session.token = token; 
+        req.session.token = token;
 
         req.session.save((err) => {
-          console.log(err);
+          if (err) {
+            console.error('Failed to save session:', err);
+            return res.status(500).send('Failed to save session');
+          }
+          return res.redirect('/mystore/home');
         });
-
-        return res.redirect('/mystore/home');
       } else {
+        global.isLoggedIn = 'false';
         req.session.destroy(() => {
           return res.redirect(
             `/user/login?message=Invalid password. Please try again.&username=${username}`,
@@ -78,6 +87,7 @@ export class UserController {
         });
       }
     } else {
+      global.isLoggedIn = 'false';
       req.session.destroy(() => {
         return res.redirect(
           `/user/login?message=Not a registered user. Please sign up.&username=${username}`,

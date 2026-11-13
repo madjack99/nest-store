@@ -20,20 +20,20 @@ export class AppController {
     const isLoggedIn = req.session.isLoggedIn;
 
     const products = await this.productService.getAll();
-    return { products, isLoggedIn };
+    return { products, isLoggedIn: global.isLoggedIn };
   }
 
   @Get('add-product')
   @Render('add-product')
   renderAddProductPage(@Req() req: Request) {
     const isLoggedIn = req.session.isLoggedIn;
-    return { isLoggedIn };
+    return { isLoggedIn: global.isLoggedIn };
   }
 
   @Get('sign-up')
   @Render('sign-up')
   renderSignUpPage(@Req() req: Request) {
     const isLoggedIn = req.session.isLoggedIn;
-    return { isLoggedIn };
+    return { isLoggedIn: global.isLoggedIn };
   }
 }
